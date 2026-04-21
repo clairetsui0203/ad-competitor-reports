@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>广告投放产品竞品调研 · 2026-04-21</title>
+<style>
+    :root {
+        --brand: #e67e22;
+        --brand-light: #fef5e7;
+        --accent: #1a237e;
+        --accent-2: #283593;
+        --bg: #f4f7f9;
+        --card: #ffffff;
+        --text: #34495e;
+        --muted: #7f8c8d;
+        --border: #dee2e6;
+        --success: #27ae60;
+        --danger: #e74c3c;
+        --info: #3498db;
+        --warning: #f39c12;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; margin: 0; padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; background: var(--card); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; }
+    .header { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%); color: white; padding: 36px 40px; }
+    .header h1 { margin: 0 0 8px; font-size: 26px; letter-spacing: 1px; font-weight: 600; }
+    .header .subtitle { font-size: 14px; opacity: 0.85; letter-spacing: 0.5px; }
+    .header .meta { display: flex; gap: 24px; margin-top: 18px; flex-wrap: wrap; font-size: 13px; opacity: 0.9; }
+    .header .meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .header .meta b { opacity: 0.7; font-weight: 400; }
+
+    .main-tabs { display: flex; background: #ecf0f1; border-bottom: 2px solid var(--border); flex-wrap: wrap; }
+    .main-tab { flex: 1; min-width: 140px; padding: 16px 12px; text-align: center; cursor: pointer; font-weight: 600; color: var(--muted); transition: all 0.25s; border-right: 1px solid var(--border); font-size: 14px; }
+    .main-tab:last-child { border-right: none; }
+    .main-tab:hover { background: #f7f9fa; color: var(--accent); }
+    .main-tab.active { background: white; color: var(--brand); border-bottom: 3px solid var(--brand); }
+
+    .main-content { display: none; padding: 32px 40px; }
+    .main-content.active { display: block; }
+
+    .card { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 24px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+    .card-header { background: #f8f9fa; padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .card-title { font-weight: 600; font-size: 16px; color: var(--accent); }
+    .card-body { padding: 20px 24px; font-size: 14px; }
+
+    .card-header.dark { background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+    .card-header.dark .card-title { color: white; }
+
+    .info-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .info-table td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+    .info-table td:first-child { width: 24%; color: var(--muted); }
+    .info-table td b { color: var(--accent); }
+    .info-table tr:last-child td { border-bottom: none; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+    .kpi-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+    .kpi-num { font-size: 28px; font-weight: 700; color: var(--brand); line-height: 1.2; }
+    .kpi-label { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    .tag { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; }
+    .tag-strategy { background: #fef5e7; color: #d35400; }
+    .tag-money { background: #fdedec; color: #c0392b; }
+    .tag-metric { background: #eafaf1; color: var(--success); }
+    .tag-milestone { background: #ebf5fb; color: var(--info); }
+    .tag-wind { background: #f4ecf7; color: #8e44ad; }
+    .tag-brand { background: #e8f8f5; color: #16a085; }
+
+    .platform-card { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+    .platform-head { background: #fafbfc; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .platform-name { font-weight: 600; color: var(--accent); font-size: 15px; }
+    .platform-body { padding: 16px 20px; }
+    .platform-item { padding: 12px 0; border-bottom: 1px dashed #ecf0f1; }
+    .platform-item:last-child { border-bottom: none; }
+    .platform-item .name { font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+    .platform-item .meta { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .platform-item .desc { font-size: 13.5px; }
+    .platform-item .takeaway { background: var(--brand-light); border-left: 3px solid var(--brand); padding: 8px 12px; margin-top: 8px; font-size: 13px; border-radius: 0 4px 4px 0; }
+    .platform-item .takeaway b { color: #d35400; }
+
+    .data-highlight { color: #d35400; font-weight: 700; }
+
+    .insight-block { padding: 16px 20px; border-radius: 6px; margin: 14px 0; font-size: 14px; }
+    .insight-success { background: #eafaf1; border-left: 4px solid var(--success); }
+    .insight-info { background: #ebf5fb; border-left: 4px solid var(--info); }
+    .insight-warn { background: #fef9e7; border-left: 4px solid var(--warning); }
+    .insight-danger { background: #fdf2f2; border-left: 4px solid var(--danger); }
+
+    .conclusion-box { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; padding: 22px 26px; border-radius: 10px; margin: 18px 0; }
+    .conclusion-box h4 { margin: 0 0 12px; font-size: 16px; opacity: 0.9; font-weight: 500; }
+    .conclusion-box p { margin: 8px 0; line-height: 1.8; }
+
+    .matrix-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    .matrix-table th, .matrix-table td { border: 1px solid var(--border); padding: 10px 12px; vertical-align: top; }
+    .matrix-table th { background: #334155; color: white; font-weight: 600; text-align: left; }
+    .matrix-table th.col-platform { background: var(--accent); width: 15%; }
+    .matrix-table td.cell-platform { background: #f8fafc; font-weight: 600; color: var(--accent); }
+    .matrix-table td small { color: var(--muted); font-size: 11.5px; display: block; margin-top: 2px; }
+    .status { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+    .status-released { background: #eafaf1; color: var(--success); }
+    .status-beta { background: #fef9e7; color: #d35400; }
+    .status-plan { background: #ebf5fb; color: var(--info); }
+    .status-none { background: #f4f4f4; color: #95a5a6; }
+
+    .src-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 13px; margin-top: 10px; }
+    .src-grid .src { background: #fafbfc; border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; }
+    .src-grid .src b { color: var(--accent); display: block; margin-bottom: 4px; }
+    .src-grid .src span { color: var(--muted); font-size: 12px; }
+
+    .footer { padding: 20px 40px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); background: #fafbfc; text-align: center; }
+
+    @media(max-width:768px) {
+        body { padding: 10px; }
+        .container { border-radius: 8px; }
+        .header { padding: 24px; }
+        .main-content { padding: 20px; }
+        .main-tabs { flex-direction: column; }
+        .grid-3, .grid-2 { grid-template-columns: 1fr; }
+        .matrix-table { font-size: 12px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>广告投放产品竞品调研</h1>
+        <div class="subtitle">巨量引擎 · 磁力引擎 · 穿山甲 · 广点通 / 腾讯广告 · 视频号</div>
+        <div class="meta">
+            <span><b>调研日期</b> · 2026-04-21</span>
+            <span><b>调研范围</b> · 平台侧投放工具与投放模式</span>
+            <span><b>入库条目</b> · 16 条</span>
+            <span><b>产出 by</b> · ad-competitor-intel Skill</span>
+        </div>
+    </div>
+
+    <div class="main-tabs">
+        <div class="main-tab active" onclick="showTab(event, 'intro')">0. 调研说明</div>
+        <div class="main-tab" onclick="showTab(event, 'landscape')">1. 全景与趋势</div>
+        <div class="main-tab" onclick="showTab(event, 'deep')">2. 深度分析</div>
+        <div class="main-tab" onclick="showTab(event, 'matrix')">3. 对比矩阵</div>
+        <div class="main-tab" onclick="showTab(event, 'implication')">4. 战略启示</div>
+        <div class="main-tab" onclick="showTab(event, 'appendix')">5. 附录</div>
+    </div>
+
+    <!-- ========== 0. 调研说明 ========== -->
+    <div id="intro" class="main-content active">
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">调研基础信息</span></div>
+            <div class="card-body">
+                <table class="info-table">
+                    <tr><td>调研主题</td><td><b>广告投放平台"投放产品"竞品扫描</b> —— 平台侧对广告主暴露的投放工具、投放模式、投放能力</td></tr>
+                    <tr><td>覆盖平台</td><td>巨量引擎、磁力引擎、穿山甲、广点通 / 腾讯广告、视频号、七猫小说</td></tr>
+                    <tr><td>产品口径</td><td>
+                        <b>投放工具</b>（AI 投放 / 对话式操控 / 场景指南 / 智能创意 / 合规预检）<br>
+                        <b>场景产品</b>（本地推 / 私信获客 / 直播获客 / 短视频带货）<br>
+                        <b>变现产品</b>（IAA 激励广告 / GroMore 聚合 / 内容资产激励 / 公众号流量主）<br>
+                        <b>数据能力</b>（AI 推荐 / 归因 / 度量 / 度量科学）
+                    </td></tr>
+                    <tr><td>数据来源</td><td>本地知识库 <code>knowledge_base/2026-04-21.md</code> 16 条入库记录；官方公众号 1 条（穿山甲）；媒体口径 1 条；第三方行业资讯站 11 条；投资 / 二手分析 3 条</td></tr>
+                    <tr><td>方法论</td><td>① 分维度拆解现有产品矩阵 → ② 跨平台横向对比 → ③ 提炼趋势与差距 → ④ 输出对自家广告业务的战略启示</td></tr>
+                    <tr><td>报告结构</td><td>1. 全景与趋势（5 大风向）· 2. 深度分析（4 个方向）· 3. 对比矩阵（5×6 能力矩阵）· 4. 战略启示（5 条）· 5. 附录（信息源与可信度）</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header dark"><span class="card-title">报告亮点速览</span></div>
+            <div class="card-body">
+                <div class="grid-3">
+                    <div class="kpi-box"><div class="kpi-num">5</div><div class="kpi-label">平台竞速中</div></div>
+                    <div class="kpi-box"><div class="kpi-num">4</div><div class="kpi-label">产品方向主线</div></div>
+                    <div class="kpi-box"><div class="kpi-num">16</div><div class="kpi-label">真实动态入库</div></div>
+                </div>
+                <div class="insight-info" style="margin-top: 20px;">
+                    <b>一句话结论：</b>头部广告平台已集体跨入 <span class="data-highlight">AI 全链路化</span> 新阶段 —— AI 已从单点工具下沉到投放主链路（出价、创意、审核、归因）；同时 <span class="data-highlight">内容资产化</span> 与广告变现深度绑定（磁力单项目 200 万现金扶持、七猫漫剧 APP 推出、视频号 AI 推荐贡献近半增速）。
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== 1. 全景与趋势 ========== -->
+    <div id="landscape" class="main-content">
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">五大趋势风向</span></div>
+            <div class="card-body">
+
+                <div class="insight-success">
+                    <b>趋势 1 · AI 投放主链路化</b><br>
+                    AI 已从单点创意 / 出价工具下沉到"策略洞察 → 内容生产 → 生意转化"全链路。代表动作：<b>巨量「品星云」</b>发布品牌 / 星图 / 千川 / 本地推全线 AI 路线图；<b>腾讯「妙问 Skill + OpenClaw」</b>构建投放 AI 助手矩阵；<b>磁力四大场景 AI 指南</b>覆盖本地 / 电商 / 线索 / 品牌。
+                </div>
+
+                <div class="insight-info">
+                    <b>趋势 2 · 对话式 / 自然语言投放</b><br>
+                    腾讯 <b>OpenClaw</b> 浏览器插件内测，<span class="data-highlight">"一句话"指令即可操控后台</span>；妙问 Skill 新增"问审核 / 查数据 / 找灵感"三大自然语言技能。<b>含义</b>：广告投放从"点击图形界面"向"自然语言对话"演进，降低新手门槛、提升老手效率。
+                </div>
+
+                <div class="insight-warn">
+                    <b>趋势 3 · 分场景 AI 指南规模化</b><br>
+                    磁力引擎发布 <b>本地 / 电商 / 线索 / 品牌 4 场景 AI 应用指南</b>，预期投放效率 +30%、人力成本 -20%。<b>含义</b>：平台侧开始用"场景解决方案"替代"通用工具"，针对不同行业客户提供差异化 AI 工具应用路径，加速 AI 工具广告主渗透。
+                </div>
+
+                <div class="insight-danger">
+                    <b>趋势 4 · 短剧 / 漫剧内容资产化竞速</b><br>
+                    磁力引擎成立短剧生态业务中心 +「磁力新剧计划」，<span class="data-highlight">单项目最高 200 万现金 + 1 亿流量</span>；淘宝、优酷同期推漫剧扶持；七猫小说推漫剧 APP。<b>含义</b>：内容类广告变现进入"平台主动造内容"阶段，"资金 + 流量 + 技术"三重红利激励成为新范式。
+                </div>
+
+                <div class="insight-success">
+                    <b>趋势 5 · AI 推荐驱动效果增长跃升</b><br>
+                    视频号年化收入约 <span class="data-highlight">500 亿（待核实）</span>，<b>AI 推荐贡献近半增速</b>，CTR / CVR +20%；腾讯网络广告整体 +17%。<b>含义</b>：内容生态 + AI 推荐模式在效果广告侧天花板被打开，非电商型流量也能驱动大规模广告收入。
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">5 平台 × 4 产品线 全景地图</span></div>
+            <div class="card-body">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th class="col-platform">平台</th>
+                            <th>投放工具</th>
+                            <th>场景产品</th>
+                            <th>变现产品</th>
+                            <th>数据能力</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="cell-platform">巨量引擎</td>
+                            <td>品星云 AI 平台<br>即创 AIGC<small>口播 30s</small></td>
+                            <td>本地推 AI 客服<small>留资 +58%</small><br>游戏节点营销</td>
+                            <td>千川 / 星图 / 品牌广告（路线图中）</td>
+                            <td>品星云 · AI 策略洞察 + 生意转化全链路</td>
+                        </tr>
+                        <tr>
+                            <td class="cell-platform">磁力引擎</td>
+                            <td>四场景 AI 指南<small>效率 +30% · 人力 -20%</small></td>
+                            <td>—</td>
+                            <td>磁力新剧计划<small>200 万 / 部 + 1 亿流量</small></td>
+                            <td>AI 营销策略活跃之星激励</td>
+                        </tr>
+                        <tr>
+                            <td class="cell-platform">穿山甲</td>
+                            <td>—</td>
+                            <td>应用 / 游戏推广</td>
+                            <td>GroMore 聚合 + 全周期分层扶持<small>投放 / 变现一体化</small></td>
+                            <td>开发者数据能力（2026 大会方向）</td>
+                        </tr>
+                        <tr>
+                            <td class="cell-platform">广点通 / 腾讯广告</td>
+                            <td>妙问 Skill<small>四技能 AI 助手</small><br>OpenClaw<small>对话式插件</small></td>
+                            <td>微信搜一搜品牌专区</td>
+                            <td>公众号流量主三大变现升级</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td class="cell-platform">视频号</td>
+                            <td>—</td>
+                            <td>带货短视频日上限 10 条<br>直播获客<small>教育 / 医美</small><br>商品合集</td>
+                            <td>视频号年化 ~500 亿（待核实）</td>
+                            <td>AI 推荐<small>CTR/CVR +20% · 贡献近半增速</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="font-size: 12px; color: var(--muted); margin-top: 10px;">"—" 表示本次调研窗口期内无显著动态入库；不代表平台无该能力。</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== 2. 深度分析 ========== -->
+    <div id="deep" class="main-content">
+
+        <!-- 方向 1 · AI 投放工具 -->
+        <div class="card">
+            <div class="card-header"><span class="card-title">方向一 · AI 投放工具（行业主战场）</span></div>
+            <div class="card-body">
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">巨量引擎</span><span class="tag tag-strategy">战略</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">「品星云」AI 核心能力全链路升级</div>
+                            <div class="meta">4/22 青岛「智·启无境」渠道合作伙伴生态大会发布 · 平台战略级动作</div>
+                            <div class="desc">覆盖范围：品牌广告 / 星图 / 千川 / 本地推全线产品自动化路线图；配套火山引擎代理商 AI 解决方案 + 2025 共擎奖 6 大赛道激励。能力升级主线：策略洞察 → 内容生产 → 生意转化全链路 AI 化。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜从"工具 AI 化"升级到"端到端 AI 平台化"，自家广告业务需评估 AI 是单点工具还是端到端平台的战略定位。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">广点通 / 腾讯广告</span><span class="tag tag-milestone">里程碑</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">妙问 Skill 升级："答知识 / 查数据 / 找灵感 / 问审核" 四技能</div>
+                            <div class="meta">2026-04-02 · AI 投放助手</div>
+                            <div class="desc">自然语言问答完成后台操作；"问审核"可在投放前预判合规性，降低被拒率；"查数据"支持自然语言查询投放数据。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜"审核 AI 化"可直接降低广告主合规成本，自家平台可考虑将合规预检能力 AI 化作为差异化功能。</div>
+                        </div>
+                        <div class="platform-item">
+                            <div class="name">OpenClaw 插件内测（对话式投放）</div>
+                            <div class="meta">2026-03-23 · AI 驱动插件 · 内测申请中</div>
+                            <div class="desc">AI 驱动的浏览器插件，直接操控腾讯广告后台，<span class="data-highlight">"一句话"指令完成投放操作</span>；与妙问 Skill 形成 AI 能力矩阵。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜广告投放工具进入"自然语言交互"时代，是行业方向性变化；建议立即评估自家投放后台的对话化改造优先级。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">磁力引擎</span><span class="tag tag-strategy">战略</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">四大场景 AI 营销应用指南</div>
+                            <div class="meta">2026-03-26 · 分场景 AI 投放工具</div>
+                            <div class="desc">本地 / 电商 / 线索 / 品牌 4 大场景差异化 AI 工具应用路径，预期 <span class="data-highlight">投放效率 +30% · 人力成本 -20%</span>；同期启动"营销策略活跃之星"激励计划。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜分场景 AI 指南降低使用门槛，加速 AI 工具广告主渗透；自家可按行业 / 场景提供差异化 AI 解决方案。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">视频号</span><span class="tag tag-wind">行业风向</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">AI 推荐驱动广告效果跃升</div>
+                            <div class="meta">2026-04-21 · AI 推荐 / 营销科学</div>
+                            <div class="desc">腾讯网络广告同比 +17%；视频号年化收入约 <span class="data-highlight">500 亿（待核实）</span>，AI 推荐使 CTR / CVR +20%，贡献近半增速；视频号已成腾讯广告最大增长引擎，超越朋友圈。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜AI 推荐 + 内容广告组合的天花板被打开，验证"内容生态 + AI 推荐"模型可在效果广告侧爆发；可探索 AI 驱动的广告效果优化路径。</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 方向 2 · 场景产品 -->
+        <div class="card">
+            <div class="card-header"><span class="card-title">方向二 · 场景产品（本地 / 线索 / 电商）</span></div>
+            <div class="card-body">
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">巨量引擎</span><span class="tag tag-metric">效果指标</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">巨量本地推 AI 私信智能客服</div>
+                            <div class="meta">2026-03-27 · 本地推 / O2O / AI 客服</div>
+                            <div class="desc">四大升级（拟人化 / 安全性 / 智能化 / 高效性）+ 六大新功能；7×24 小时智能接待；<span class="data-highlight">内测留资率 +58% · 有效率 +56%</span>；适用餐饮、酒旅等本地生活行业。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜AI 客服 + 私信获客组合在本地生活 / 线索行业已验证量化效果，自家本地推 / 线索型产品可立项跟进此类工具能力。</div>
+                        </div>
+                        <div class="platform-item">
+                            <div class="name">游戏行业春季踏青节点流量扶持</div>
+                            <div class="meta">2026-04-01 · 游戏推广 / 节点营销</div>
+                            <div class="desc">春游踏青节点游戏 CPM 有望降低，提供完整节点营销方案，配套专属素材指南。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜节点营销 + 流量扶持的客户激励范式；可按行业节点设计类似激励方案增强客户粘性。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">视频号</span><span class="tag tag-strategy">战略</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">直播获客功能上线</div>
+                            <div class="meta">2026-04-01 · 线索广告 / 教育 / 医美</div>
+                            <div class="desc">直播场景中直接收集用户留资信息，闭环"内容 + 直播 + 获客"；教育、医美等线索型行业预期获客效率显著提升。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜直播 + 线索的组合打法对线索型广告业务有直接借鉴意义；可关注此功能在广告主侧的应用效果。</div>
+                        </div>
+                        <div class="platform-item">
+                            <div class="name">带货短视频日上限提至 10 条 + 商品合集挂载</div>
+                            <div class="meta">2026-03-17 / 2026-03-24 · 电商 / 内容运营</div>
+                            <div class="desc">日发布上限从原有数量提升至 10 条；单条视频可挂载商品合集；两政策叠加形成"多视频 + 多商品"组合，显著扩展电商客户内容投放容量。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜视频号持续通过放开内容发布限制驱动平台内容繁荣；内容激励政策对广告主行为的影响机制可参考。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">广点通 / 腾讯广告</span><span class="tag tag-brand">品牌</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">微信搜一搜品牌专区升级</div>
+                            <div class="meta">2026-03-30 · 品牌广告 / 行业场景解决方案</div>
+                            <div class="desc">品牌搜索功能全面焕新，品牌专区内容呈现更加丰富，强化品牌心智建设能力；与腾讯广告整体 AI 化体系形成协同。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜搜索 + 展示品效协同成重要方向；可关注搜索广告与品牌展示结合的产品形态设计。</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 方向 3 · 变现产品 -->
+        <div class="card">
+            <div class="card-header"><span class="card-title">方向三 · 变现产品（IAA / 内容资产 / 聚合）</span></div>
+            <div class="card-body">
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">磁力引擎</span><span class="tag tag-money">重金</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">短剧生态业务中心成立 +「磁力新剧计划」</div>
+                            <div class="meta">2026-04-01 · 内容变现 / 短剧 / IAA</div>
+                            <div class="desc">4 大权益（现金投资 / 分成政策 / 流量激励 / 宣发资源）；全资剧 + 合资剧双模式；<span class="data-highlight">仿真人剧单项目最高 200 万现金 + 1 亿流量扶持</span>；覆盖 AI 真人 / 3D 漫剧 / 2D 漫剧 / 沙雕漫 / 解说漫全画风。同期淘宝、优酷推漫剧扶持政策，赛道进入平台竞速。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜平台正把内容资产化与广告变现深度绑定；"资金 + 流量 + 技术"三重红利激励体系值得借鉴，适用于内容生态广告业务战略。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">穿山甲</span><span class="tag tag-strategy">战略</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">2026 开发者伙伴交流会「Align 聚力·共生」</div>
+                            <div class="meta">2026-04-16 成都 · IAA / GroMore / 全周期扶持 · <b>严格官方源</b></div>
+                            <div class="desc">以"APP 经营赋能"为核心；<b>GroMore 升级实现投放与变现高效协同</b>；推出全周期分层扶持策略，覆盖新开发者到成熟开发者的差异化资源支持。激励广告（IAA）依然是核心变现手段。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜"投放 + 变现"一体化能力持续是行业核心路线；分层扶持 + 聚合变现体系的建设经验可参考，适用于自家流量变现产品设计。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">七猫小说</span><span class="tag tag-wind">行业风向</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">IAA 变现体系扩展（含七猫漫剧 APP）</div>
+                            <div class="meta">2026-04-21 · 激励广告 / IAA / 多形式变现</div>
+                            <div class="desc">免费阅读 + IAA 为核心变现模式；2026 年七猫漫剧 APP 正式推出，扩展"小说 + 漫剧"双端变现场景；多层次广告收入（激励视频 / 信息流 / 开屏等）。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜内容类 APP IAA 变现参考案例；漫剧端拓展印证"内容形式多元化"是 IAA 变现的扩容路径。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">广点通 / 腾讯广告</span><span class="tag tag-strategy">战略</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">公众号创作者三大变现能力升级</div>
+                            <div class="meta">2026-03-24 · 内容生态 / 流量主</div>
+                            <div class="desc">流量主广告升级等三大变现能力提升创作者收益；公众号内容营销价值提升；微信生态整体商业化从视频号扩展到公众号全面推进变现。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜内容生态激励机制与广告变现体系协同设计；生态繁荣激励策略对吸引优质创作者留存有直接价值。</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 方向 4 · 创意 / AIGC 工具 -->
+        <div class="card">
+            <div class="card-header"><span class="card-title">方向四 · 创意 / AIGC 工具</span></div>
+            <div class="card-body">
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">巨量引擎</span><span class="tag tag-milestone">里程碑</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">「即创」AI 人物口播模型升级至 30 秒</div>
+                            <div class="meta">2026-04-01 · 智能创意 / AIGC</div>
+                            <div class="desc">AI 口播视频时长由原限制升级至 30 秒，交互体验全面升级；适用产品介绍与品牌宣传场景，大幅提升内容表达空间，降低素材生产成本。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜AIGC 创意工具向长视频格式拓展；可关注 AI 口播技术引入用于批量素材生产，降低创意成本。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <div class="platform-head"><span class="platform-name">广点通 / 腾讯广告</span><span class="tag tag-milestone">里程碑</span></div>
+                    <div class="platform-body">
+                        <div class="platform-item">
+                            <div class="name">妙问 Skill "找灵感"创意辅助</div>
+                            <div class="meta">2026-04-02 · AI 创意辅助（作为妙问 Skill 的子能力）</div>
+                            <div class="desc">自然语言问答方式辅助创意素材生产，提升内容产出效率；与即创等纯生成类工具形成"咨询 + 生成"互补。</div>
+                            <div class="takeaway"><b>对我们的启示</b>｜AI 创意工具从"生成"进入"咨询 + 生成"阶段，需同步规划创意灵感层能力。</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== 3. 对比矩阵 ========== -->
+    <div id="matrix" class="main-content">
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">5 平台 × 6 能力维度 横向对比矩阵</span></div>
+            <div class="card-body">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th class="col-platform">平台</th>
+                            <th>AI 端到端投放平台</th>
+                            <th>对话式 / 自然语言操作</th>
+                            <th>分场景 AI 指南</th>
+                            <th>创意 AIGC 工具</th>
+                            <th>本地 / 线索转化</th>
+                            <th>内容资产 / 变现</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="cell-platform">巨量引擎</td>
+                            <td><span class="status status-released">已发布</span><small>品星云全链路</small></td>
+                            <td><span class="status status-plan">规划中</span><small>路线图中</small></td>
+                            <td><span class="status status-released">已发布</span><small>游戏节点 / 行业方案</small></td>
+                            <td><span class="status status-released">已发布</span><small>即创 · 30 秒口播</small></td>
+                            <td><span class="status status-released">已发布</span><small>本地推 AI 客服 · 留资 +58%</small></td>
+                            <td><span class="status status-plan">规划中</span><small>品星云含品牌广告路线</small></td>
+                        </tr>
+                        <tr>
+                            <td class="cell-platform">磁力引擎</td>
+                            <td><span class="status status-plan">规划中</span><small>4 场景 AI 指南雏形</small></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-released">已发布</span><small>效率 +30% · 人力 -20%</small></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-plan">规划中</span><small>本地场景 AI 指南</small></td>
+                            <td><span class="status status-released">已发布</span><small>磁力新剧 · 200 万 / 部</small></td>
+                        </tr>
+                        <tr>
+                            <td class="cell-platform">穿山甲</td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-released">已发布</span><small>GroMore + 分层扶持</small></td>
+                        </tr>
+                        <tr>
+                            <td class="cell-platform">广点通 / 腾讯广告</td>
+                            <td><span class="status status-plan">规划中</span><small>妙问 + OpenClaw 矩阵</small></td>
+                            <td><span class="status status-beta">内测</span><small>OpenClaw · 一句话操作</small></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-released">已发布</span><small>妙问 · 找灵感</small></td>
+                            <td><span class="status status-released">已发布</span><small>微信搜一搜品牌专区</small></td>
+                            <td><span class="status status-released">已发布</span><small>公众号流量主升级</small></td>
+                        </tr>
+                        <tr>
+                            <td class="cell-platform">视频号</td>
+                            <td><span class="status status-released">已发布</span><small>AI 推荐 · 贡献近半增速</small></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-none">—</span></td>
+                            <td><span class="status status-released">已发布</span><small>直播获客 / 商品合集</small></td>
+                            <td><span class="status status-released">已发布</span><small>年化 ~500 亿（待核实）</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="font-size: 12px; color: var(--muted); margin-top: 12px;">
+                    状态口径：<span class="status status-released">已发布</span> 已公开上线 ·
+                    <span class="status status-beta">内测</span> 邀请制 / 灰度内测 ·
+                    <span class="status status-plan">规划中</span> 路线图披露 / 组合中 ·
+                    <span class="status status-none">—</span> 本次调研窗口期内无显著动态
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">核心观察</span></div>
+            <div class="card-body">
+                <div class="insight-success"><b>观察 1｜AI 端到端平台化赛道：巨量领跑，腾讯紧随。</b>巨量「品星云」率先把 AI 渗透到全链路；腾讯通过妙问 + OpenClaw 矩阵补位；磁力、视频号仍以"AI 单点 + AI 推荐"为主。</div>
+                <div class="insight-info"><b>观察 2｜对话式投放独苗：腾讯 OpenClaw。</b>目前仅腾讯在做"一句话操控后台"，是行业里程碑级产品；其他平台短期内大概率跟进。</div>
+                <div class="insight-warn"><b>观察 3｜内容资产 / 变现差异化：磁力 + 视频号领先。</b>磁力用"重金扶持短剧"建立内容壁垒；视频号用"AI 推荐 + 内容放量"跑通 500 亿规模（待核实）；穿山甲坚守 IAA / GroMore 路线。</div>
+                <div class="insight-danger"><b>观察 4｜本地 / 线索转化：巨量量化效果最硬。</b>留资率 +58% 是行业稀缺的完整量化数据，可能成本地生活 / 线索行业新基准。</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== 4. 战略启示 ========== -->
+    <div id="implication" class="main-content">
+
+        <div class="conclusion-box">
+            <h4>对自家广告业务的 5 条战略启示</h4>
+            <p><b>启示 1 · AI 平台化是明线，不跟即落后。</b>从"AI 是工具"到"AI 是平台主链路"的跃迁正在完成。需尽快定义自家 AI 平台产品愿景（是单点工具、能力矩阵、还是端到端平台）。</p>
+            <p><b>启示 2 · 对话式投放（Natural Language Ads Ops）是下一战役。</b>OpenClaw 领先半年；建议立即启动对话式投放后台的产品设计 / POC，争取 6-9 个月内完成内测，避免被定义"行业标准"者锁定。</p>
+            <p><b>启示 3 · 分场景 AI 指南是降渗透门槛的关键。</b>磁力"4 场景 AI 应用指南"是轻量级产品化策略；可考虑以行业 / 场景为单位，推出差异化 AI 工具包 + 激励计划。</p>
+            <p><b>启示 4 · 本地 / 线索转化 AI 化是量化红利窗口。</b>巨量 +58% 留资率是完整闭环数据；建议选取 1-2 个高毛利行业（餐饮 / 医美 / 教育）试点 AI 客服 + 私信获客组合，抢 Q2 / Q3 样板客户。</p>
+            <p><b>启示 5 · 内容资产化与广告变现深度绑定。</b>磁力 200 万 / 部短剧扶持、视频号 AI 推荐驱动年化 500 亿，都印证"平台主动造内容 → 广告变现"路径。若自家有内容流量入口，应尽快规划"资金 + 流量 + 技术"三重红利的内容激励体系。</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">行动建议优先级</span></div>
+            <div class="card-body">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%;">P</th>
+                            <th style="width: 24%;">动作</th>
+                            <th style="width: 18%;">对标</th>
+                            <th style="width: 14%;">时间窗</th>
+                            <th>理由 / 预期收益</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>P0</b></td>
+                            <td>对话式投放后台 POC 立项</td>
+                            <td>腾讯 OpenClaw</td>
+                            <td>Q2 内测</td>
+                            <td>行业新品类窗口期仅 6-9 个月；不跟进等于让对手定义交互范式</td>
+                        </tr>
+                        <tr>
+                            <td><b>P0</b></td>
+                            <td>定义自家 AI 投放平台愿景 + 路线图</td>
+                            <td>巨量品星云</td>
+                            <td>Q2 内部对齐</td>
+                            <td>决定下一阶段产品架构与组织投入，一票否决其他 AI 小工具的优先级</td>
+                        </tr>
+                        <tr>
+                            <td><b>P1</b></td>
+                            <td>本地 / 线索 AI 客服试点</td>
+                            <td>巨量本地推</td>
+                            <td>Q2-Q3</td>
+                            <td>留资率 +58% 有量化对标；高毛利垂类（餐饮 / 医美）快速跑样板</td>
+                        </tr>
+                        <tr>
+                            <td><b>P1</b></td>
+                            <td>"合规 AI 预检"功能产品化</td>
+                            <td>腾讯妙问 · 问审核</td>
+                            <td>Q2</td>
+                            <td>差异化功能点，直接降低广告主被拒率，客户感知强</td>
+                        </tr>
+                        <tr>
+                            <td><b>P2</b></td>
+                            <td>分场景 AI 工具包 + 激励计划</td>
+                            <td>磁力 4 场景指南</td>
+                            <td>Q3</td>
+                            <td>轻量级、快落地；扩大 AI 工具广告主渗透率</td>
+                        </tr>
+                        <tr>
+                            <td><b>P2</b></td>
+                            <td>AIGC 长视频（30s+）口播工具</td>
+                            <td>巨量即创</td>
+                            <td>Q3</td>
+                            <td>素材生产效率红利；品牌 / 电商通用</td>
+                        </tr>
+                        <tr>
+                            <td><b>P3</b></td>
+                            <td>若有内容流量入口，评估"内容资产激励体系"</td>
+                            <td>磁力新剧计划</td>
+                            <td>Q4 调研</td>
+                            <td>战略级投入，需结合自家内容生态实际体量评估 ROI</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== 5. 附录 ========== -->
+    <div id="appendix" class="main-content">
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">信息源与可信度</span></div>
+            <div class="card-body">
+                <table class="info-table">
+                    <tr><td>严格官方源</td><td><b>1 条</b>（6%）· 穿山甲开发者公众号（2026 开发者交流会）</td></tr>
+                    <tr><td>媒体直引平台官方口径</td><td><b>1 条</b>（6%）· 千龙网（巨量引擎 4/22 大会）</td></tr>
+                    <tr><td>第三方行业资讯站</td><td><b>11 条</b>（69%）· 10100.com / 天擎天拓观察 / 大数跨境</td></tr>
+                    <tr><td>投资 / 二手分析</td><td><b>2 条</b>（13%）· 雪球（视频号 AI 推荐）</td></tr>
+                    <tr><td>内容平台二手</td><td><b>1 条</b>（6%）· 今日头条（七猫小说）</td></tr>
+                </table>
+                <div class="insight-warn" style="margin-top: 16px;"><b>⚠️ 可信度警示</b>：严格官方源占比偏低（6%），本次调研大量依赖第三方资讯站。<b>建议</b>下一调研周期重点挖掘磁力引擎、广点通、视频号的官方公众号原文，并对 10100.com 等单一来源的信息进行多源交叉验证。</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">待核实清单</span></div>
+            <div class="card-body">
+                <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                    <li><b>视频号年化收入约 500 亿</b> — 仅雪球投资分析报道，需通过腾讯财报或官方文件交叉验证</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">新发现公众号候选</span></div>
+            <div class="card-body">
+                <div class="src-grid">
+                    <div class="src"><b>七猫商业化</b>（待确认）<span>七猫官方商业化口径账号；需进一步确认归属与更新频率</span></div>
+                    <div class="src"><b>天擎天拓互联网营销</b>（非官方但高价值）<span>多平台政策综合观察类账号，信息密度高，适合作为交叉验证来源</span></div>
+                </div>
+                <div class="insight-info" style="margin-top: 14px;"><b>下一步动作</b>｜这些候选应进入"候选账号池"管理：首次发现后记录；若连续 N 次（建议 7 次）被采用且信息质量稳定，再由人工 review 决定是否正式加入 SKILL.md 的监控对象表。</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">数据口径与限制</span></div>
+            <div class="card-body">
+                <div class="insight-warn"><b>调研窗口限制</b>｜本报告基于 2026-04-21 当日入库的 16 条动态，覆盖近 4 周（3/23 - 4/21）的公开信息。不代表各平台在本次范围外无相关动作；对关键平台未被覆盖的能力（如穿山甲的 AI 投放工具）应视为"本次未入库"，而非"平台无此能力"。</div>
+                <div class="insight-info"><b>分析方法</b>｜本次调研基于本地 knowledge_base 的已入库数据进行结构化分析，未做实时补搜；下一轮同主题调研可启用 SKILL.md 步骤 6b 的"历史 + 实时补搜"增强模式，以提升时效性与覆盖度。</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        本报告由 ad-competitor-intel Skill 自动生成 · 数据基于 2026-04-21 knowledge_base · 主题：广告投放产品竞品调研
+    </div>
+
+</div>
+
+<script>
+    function showTab(evt, id) {
+        document.querySelectorAll('.main-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.main-tab').forEach(el => el.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        evt.currentTarget.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
